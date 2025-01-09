@@ -3,11 +3,16 @@
 
 namespace composition {
 
-P2Component::P2Component(const rclcpp::NodeOptions& options) : Node("rotate_publisher") {
+P2Component::P2Component(const rclcpp::NodeOptions& options) : Node("rotate_publisher", options) {
+    // publisher
+    publisher_ = create_publisher<geometry_msgs::msg::Twist>("/turtle1/cmd_vel", rclcpp::QoS(10));
 
-    publisher_ = create_publisher<geometry_msgs::msg::Twist>("/turtle1/cmd_vel");
+    // timer
+    timer_ = create_wall_timer(std::chrono::duration<double, std::chrono::seconds::period>(0.01), std::bind(&P2Component::rotate, this));
 
     P2Component::rotate();
+
+    std::cout<<"sigma boy"<<std::endl;
 
 }
 
@@ -15,7 +20,14 @@ void P2Component::rotate() {
 
     std::cout<<"Starting rotate callback\n";
     
-    auto message = geometry_msgs::msg::Twist({1, 0, 0}, {0, 0, 1});
+    auto message = geometry_msgs::msg::Twist();
+    message.linear.x = 1;
+    message.linear.y = 0;
+    message.linear.z = 0;
+    message.angular.x = 0;
+    message.angular.y = 0;
+    message.angular.z = 1;
+
     publisher_->publish(message);
 
 }

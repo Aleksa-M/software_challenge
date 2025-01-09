@@ -5,7 +5,6 @@
 #include <string>
 
 #include <rclcpp/rclcpp.hpp>
-
 #include <turtlesim/srv/kill.hpp>
 
 namespace composition {

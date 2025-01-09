@@ -3,7 +3,7 @@
 
 namespace composition {
 
-P1Component::P1Component(const rclcpp::NodeOptions& options) : Node("kill_client") {
+P1Component::P1Component(const rclcpp::NodeOptions& options) : Node("kill_client", options) {
     // client
     client_ = create_client<turtlesim::srv::Kill>("/kill");
 

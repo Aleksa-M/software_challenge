@@ -23,7 +23,7 @@ void P3Component::spawn() {
     auto stationary_callback = [this](rclcpp::Client<turtlesim::srv::Spawn>::SharedFuture response) -> void {
         RCLCPP_INFO(this->get_logger(), "spawned stationary turtle");
         auto output = response.get();
-        RCLCPP_INFO(this->get_logger(), "response: %s", output->name);
+        RCLCPP_INFO(this->get_logger(), "response: %s", output->name.c_str());
     };
 
     auto stationary_result = client_->async_send_request(stationary_req, stationary_callback);
@@ -36,7 +36,7 @@ void P3Component::spawn() {
     auto moving_callback = [this](rclcpp::Client<turtlesim::srv::Spawn>::SharedFuture response) -> void {
         RCLCPP_INFO(this->get_logger(), "spawned moving turtle");
         auto output = response.get();
-        RCLCPP_INFO(this->get_logger(), "response: %s", output->name);
+        RCLCPP_INFO(this->get_logger(), "response: %s", output->name.c_str());
     };
 
     auto moving_result = client_->async_send_request(moving_req, moving_callback);

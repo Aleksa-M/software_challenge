@@ -20,6 +20,7 @@ void P4Component::teleport() {
     req->y = 10.0;
 
     auto callback = [this](rclcpp::Client<turtlesim::srv::TeleportAbsolute>::SharedFuture response) -> void {
+        (void)response;
         RCLCPP_INFO(this->get_logger(), "teleported moving_turtle to original coordinates");
     };
 

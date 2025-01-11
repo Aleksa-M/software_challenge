@@ -13,7 +13,7 @@ P1Component::P1Component(const rclcpp::NodeOptions& options) : Node("kill_client
 
 void P1Component::kill() {
 
-    RCLCPP_INFO(this->get_logger(), "starting turtle kill process")
+    RCLCPP_INFO(this->get_logger(), "starting turtle kill process");
 
 
     auto topics = this->get_topic_names_and_types();
@@ -33,7 +33,8 @@ void P1Component::kill() {
             
             // callback
             auto callback = [this, turtle_name](rclcpp::Client<turtlesim::srv::Kill>::SharedFuture response) -> void {
-                RCLCPP_INFO(this->get_logger(), "killed: %s", turtle_name);
+                (void)response;
+                RCLCPP_INFO(this->get_logger(), "killed: %s", turtle_name.c_str());
             };
             
             auto result = client_->async_send_request(req, callback);

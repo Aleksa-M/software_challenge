@@ -9,13 +9,11 @@ P3Component::P3Component(const rclcpp::NodeOptions& options) : Node("spawn_clien
 
     P3Component::spawn();
 
-    std::cout<<"sigma boy 3"<<std::endl;
-
 }
 
 void P3Component::spawn() {
 
-    std::cout<<"Starting spawn callback\n";
+    RCLCPP_INFO(this->get_logger(), "started spawn process");
     
     auto stationary_req = std::make_shared<turtlesim::srv::Spawn::Request>();
     stationary_req->name = "stationary_turtle";
@@ -23,9 +21,9 @@ void P3Component::spawn() {
     stationary_req->y = 5.0;
 
     auto stationary_callback = [this](rclcpp::Client<turtlesim::srv::Spawn>::SharedFuture response) -> void {
-        std::cout<<"spawning stationary_turtle"<<std::endl;
+        RCLCPP_INFO(this->get_logger(), "spawned stationary turtle");
         auto output = response.get();
-        std::cout<<"spawned stationary_turtle"<<std::endl;
+        RCLCPP_INFO(this->get_logger(), "response: %s", output->name);
     };
 
     auto stationary_result = client_->async_send_request(stationary_req, stationary_callback);
@@ -36,9 +34,9 @@ void P3Component::spawn() {
     moving_req->y = 10.0;
 
     auto moving_callback = [this](rclcpp::Client<turtlesim::srv::Spawn>::SharedFuture response) -> void {
-        std::cout<<"spawning moving_turtle"<<std::endl;
+        RCLCPP_INFO(this->get_logger(), "spawned moving turtle");
         auto output = response.get();
-        std::cout<<"spawned moving_turtle"<<std::endl;
+        RCLCPP_INFO(this->get_logger(), "response: %s", output->name);
     };
 
     auto moving_result = client_->async_send_request(moving_req, moving_callback);

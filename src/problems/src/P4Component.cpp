@@ -9,22 +9,18 @@ P4Component::P4Component(const rclcpp::NodeOptions& options) : Node("reset_clien
 
     P4Component::teleport();
 
-    std::cout<<"sigma boy 4"<<std::endl;
-
 }
 
 void P4Component::teleport() {
 
-    std::cout<<"Starting reset callback\n";
+    RCLCPP_INFO(this->get_logger(), "started teleport process");
     
     auto req = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
     req->x = 25.0;
     req->y = 10.0;
 
     auto callback = [this](rclcpp::Client<turtlesim::srv::TeleportAbsolute>::SharedFuture response) -> void {
-        std::cout<<"reseting moving_turtle"<<std::endl;
-        auto output = response.get();
-        std::cout<<"reset moving_turtle"<<std::endl;
+        RCLCPP_INFO(this->get_logger(), "teleported moving_turtle to original coordinates");
     };
 
     auto result = client_->async_send_request(req, callback);

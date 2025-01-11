@@ -55,29 +55,19 @@ void P6Component::execute(const std::shared_ptr<GoalHandleActionServer> goal_han
     // init
     rclcpp::Time start_time = this->now();
     rclcpp::Rate cycle_rate{1};
-    RCLCPP_INFO(this->get_logger(), "Excuting Goal");
     const auto goal = goal_handle->get_goal();
-    std::unique_ptr<problems::action::Waypoint::Feedback> feedback = std::make_unique<problems::action::Waypoint::Feedback>();
     std::unique_ptr<problems::action::Waypoint::Result> result = std::make_unique<problems::action::Waypoint::Result>();
 
     // calculate angle
     float target_ang = atan((goal->y - P6Component::y_pos) / (goal->x - P6Component::x_pos));
     if (target_ang < 0) target_ang += 2*M_PI;
-    RCLCPP_INFO(this->get_logger(), "Calculated angle");
 
     // error margins
     float rot_error = 0.01;
     float dist_error = 0.01;
-    RCLCPP_INFO(this->get_logger(), "inited error vals");
 
-    RCLCPP_INFO(this->get_logger(), "P6Component::theta_pos = %f", P6Component::theta_pos);
-    RCLCPP_INFO(this->get_logger(), "target_ang = %f", target_ang);
-    RCLCPP_INFO(this->get_logger(), "rot_error = %f", rot_error);
-    RCLCPP_INFO(this->get_logger(), "abs(P6Component::theta_pos - target_ang) = %f", abs(P6Component::theta_pos - target_ang);
     // rotation
-    while (rclcpp::ok() && (abs(P6Component::theta_pos - target_ang) < rot_error)) {
-        RCLCPP_INFO(this->get_logger(), "rotation iteration");
-        
+    while (rclcpp::ok() && (abs(P6Component::theta_pos - target_ang) >= rot_error)) {
         // check to see if goal is cancelled
         if (goal_handle->is_canceling()) {
             RCLCPP_INFO(this->get_logger(), "Goal Canceled");
@@ -99,15 +89,13 @@ void P6Component::execute(const std::shared_ptr<GoalHandleActionServer> goal_han
         rot_msg->angular.y = 0;
         rot_msg->angular.z = 1;
         this->publisher_->publish(std::move(rot_msg));
-        RCLCPP_INFO(this->get_logger(), "published rot_msg");
 
         // feedback
+        auto feedback = std::make_unique<problems::action::Waypoint::Feedback>();
         feedback->x_pos = this->P6Component::x_pos;
         feedback->y_pos = this->P6Component::y_pos;
         feedback->theta_pos = this->P6Component::theta_pos;
         goal_handle->publish_feedback(std::move(feedback));
-
-        RCLCPP_INFO(this->get_logger(), "published feedback");
     }
 
     // check to see if goal is cancelled
@@ -125,9 +113,7 @@ void P6Component::execute(const std::shared_ptr<GoalHandleActionServer> goal_han
     }
 
     // straight line motion
-    while (rclcpp::ok() && (sqrt(pow(P6Component::x_pos - goal->x, 2) + pow(P6Component::y_pos < goal->y, 2)) < dist_error)) {
-        RCLCPP_INFO(this->get_logger(), "straight itteration");
-
+    while (rclcpp::ok() && (sqrt(pow(P6Component::x_pos - goal->x, 2) + pow(P6Component::y_pos < goal->y, 2)) >= dist_error)) {
         // check to see if goal is cancelled
         if (goal_handle->is_canceling()) {
             RCLCPP_INFO(this->get_logger(), "Goal Canceled");
@@ -151,14 +137,12 @@ void P6Component::execute(const std::shared_ptr<GoalHandleActionServer> goal_han
         fwd_msg->angular.y = 0;
         fwd_msg->angular.z = 0;
         this->publisher_->publish(std::move(fwd_msg));
-        RCLCPP_INFO(this->get_logger(), "published fwd_msg");
 
+        auto feedback = std::make_unique<problems::action::Waypoint::Feedback>();
         feedback->x_pos = this->P6Component::x_pos;
         feedback->y_pos = this->P6Component::y_pos;
         feedback->theta_pos = this->P6Component::theta_pos;
-
         goal_handle->publish_feedback(std::move(feedback));
-        RCLCPP_INFO(this->get_logger(), "published feedback");
     }
 
     if (rclcpp::ok()) {

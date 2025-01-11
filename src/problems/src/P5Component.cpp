@@ -46,8 +46,6 @@ P5Component::P5Component(const rclcpp::NodeOptions& options) : Node("dist_publis
 
     timer_ = this->create_wall_timer(std::chrono::duration<int, std::chrono::seconds::period>(1), publisher_callback, callback_group);
 
-    std::cout<<"sigma boy 5"<<std::endl;
-
 }
 
 }

@@ -13,7 +13,6 @@ class P1Component : public rclcpp::Node {
         P1Component(const rclcpp::NodeOptions& options);
     private:
         rclcpp::Client<turtlesim::srv::Kill>::SharedPtr client_;
-        rclcpp::TimerBase::SharedPtr timer_;
         void kill();
 };
 

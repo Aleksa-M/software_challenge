@@ -10,9 +10,7 @@ P2Component::P2Component(const rclcpp::NodeOptions& options) : Node("rotate_publ
     // timer
     timer_ = create_wall_timer(std::chrono::duration<double, std::chrono::seconds::period>(0.01), std::bind(&P2Component::rotate, this));
 
-    P2Component::rotate();
-
-    std::cout<<"sigma boy"<<std::endl;
+    std::cout<<"sigma boy 2"<<std::endl;
 
 }
 

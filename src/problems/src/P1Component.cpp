@@ -7,12 +7,9 @@ P1Component::P1Component(const rclcpp::NodeOptions& options) : Node("kill_client
     // client
     client_ = create_client<turtlesim::srv::Kill>("/kill");
 
-    // callback
-    //timer_ = create_wall_timer(std::chrono::duration<int, std::chrono::seconds::period>(2), std::bind(&P1Component::kill, this));
-
     P1Component::kill();
 
-    std::cout<<"sigma boy"<<std::endl;
+    std::cout<<"sigma boy 1"<<std::endl;
 
 
 }
@@ -42,10 +39,10 @@ void P1Component::kill() {
                 std::cout<<"killed: "<<turtle_name<<"\n";
                 auto output = response.get();
                 std::cout<<"response: "<<output<<"\n";
-                //rclcpp::shutdown();
             };
             
             auto result = client_->async_send_request(req, callback);
+            // async in case i forget
         }
     }
 
